@@ -84,17 +84,26 @@
         var eventMove = "mousemove";
         // check if the device is touch screen
         if ("ontouchstart" in window) {
-            eventMove = "touchmove";
+            eventMove = "touchstart";
         }
 
         document.querySelector("body").addEventListener(eventMove, function(event) {
+            console.log("event triggered");
             var x, y;
             if (eventMove === "mousemove") {
                 x = event.pageX;
                 y = event.pageY;
             } else {
-                x = event.touches[0].clientX;
-                y = event.touches[0].clientY;
+              if (event.touches && event.touches[0]) {
+                  x = event.touches[0].clientX;
+                  y = event.touches[0].clientY;
+              } else if (event.originalEvent && event.originalEvent.changedTouches[0]) {
+                  x = event.originalEvent.changedTouches[0].clientX;
+                  y = event.originalEvent.changedTouches[0].clientY;
+              } else if (event.clientX && event.clientY) {
+                  x = event.clientX;
+                  y = event.clientY;
+              }
             }
 
             document.querySelectorAll(".eye").forEach(function(eye) {
