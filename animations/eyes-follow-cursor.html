@@ -75,12 +75,26 @@
         }
     </style>
     <script>
-        document.querySelector("body").addEventListener("mousemove", function(event) {
+        var eventMove = "mousemove";
+        // check if the device is touch screen
+        if ("ontouchstart" in window) {
+            eventMove = "touchmove";
+        }
+
+        document.querySelector("body").addEventListener(eventMove, function(event) {
+            var x, y;
+            if (eventMove === "mousemove") {
+                x = event.pageX;
+                y = event.pageY;
+            } else {
+                x = event.touches[0].clientX;
+                y = event.touches[0].clientY;
+            }
 
             document.querySelectorAll(".eye").forEach(function(eye) {
-                var x = eye.getBoundingClientRect().left + (eye.clientWidth / 2);
-                var y = eye.getBoundingClientRect().top + (eye.clientHeight / 2);
-                var radian = Math.atan2(event.pageX - x, event.pageY - y);
+                var xEye = eye.getBoundingClientRect().left + (eye.clientWidth / 2);
+                var yEye = eye.getBoundingClientRect().top + (eye.clientHeight / 2);
+                var radian = Math.atan2(x - xEye, y - yEye);
                 var rotate = (radian * (180 / Math.PI) * -1) + 270;
                 var rotateStyleRule = "rotate(" + rotate + "deg)";
 
@@ -90,7 +104,7 @@
                 eye.style.transform = rotateStyleRule;
             });
         });
-      </script>
+    </script>
   </div>
 </body>
 </html>
